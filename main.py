@@ -9,6 +9,8 @@ from langchain.chains.question_answering import load_qa_chain
 from langchain.callbacks import get_openai_callback
 from langchain.prompts import PromptTemplate
 from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings
+from langchain_anthropic import AnthropicLLM
+
 import google.generativeai as genai
 
 if 'model_name' not in st.session_state:
@@ -52,13 +54,16 @@ def main():
         query = st.text_input("Ask questions about your PDF file:")
 
         # LLM choices
-        col1, col2 = st.columns([1, 1])
+        col1, col2, col3 = st.columns([1, 1, 1])
 
         with col1:
             b1 = st.button(label='ChatGPT (OpenAI)', on_click=change_name, args=['Select ChatGPT (OpenAI)'],
                            key='OpenAI')
         with col2:
             b2 = st.button(label='Gemini', on_click=change_name, args=['Select Gemini'], key='Gemini')
+
+        with col3:
+            b3 = st.button(label='Claude 3', on_click=change_name, args=['Select Claude 3'], key='Claude 3')
 
         if query and b1:
 
@@ -120,6 +125,32 @@ def main():
                 response = chain.run(input_documents=docs, question=query)
 
                 print(response)
+                st.write(response)
+                st.success("Done")
+
+        elif query and b3:
+
+            text_splitter = RecursiveCharacterTextSplitter(
+                chunk_size=3000,
+                chunk_overlap=200,
+                length_function=len
+            )
+            chunks = text_splitter.split_text(text=text)
+
+            # Convert the chunks of text into embeddings to form the knowledge base
+            embeddings = OpenAIEmbeddings()
+            knowledgeBase = FAISS.from_texts(chunks, embeddings)
+            llm = AnthropicLLM(model='claude-2.1')
+
+            print(f"Using LLM: {llm} model")
+            docs = knowledgeBase.similarity_search(query=query)
+
+            with st.spinner("Processing Claude"):
+                chain = load_qa_chain(llm=llm, chain_type="stuff")
+
+                with get_openai_callback() as cost:
+                    response = chain.run(input_documents=docs, question=query)
+                    print(cost)
                 st.write(response)
                 st.success("Done")
         else:

@@ -73,9 +73,9 @@ def main():
             # Convert the chunks of text into embeddings to form the knowledge base
             embeddings = OpenAIEmbeddings()
             knowledgeBase = FAISS.from_texts(chunks, embeddings)
-            llm = OpenAI(model_name="gpt-4-0125-preview",
-                         temperature=0,
-                         openai_api_key=st.secrets["OPENAI_API_KEY"]
+            llm = OpenAI(openai_api_key=st.secrets["OPENAI_API_KEY"],
+                         model_name="gpt-4-0125-preview",
+                         temperature=0
                          )
 
             print(f"Using LLM: {llm} model")

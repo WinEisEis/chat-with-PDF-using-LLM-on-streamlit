@@ -75,7 +75,7 @@ def main():
             knowledgeBase = FAISS.from_texts(chunks, embeddings)
             llm = OpenAI(model_name="gpt-4-0125-preview",
                          temperature=0,
-                         openai_api_key=os.getenv("OPENAI_API_KEY"))
+                         )
 
             print(f"Using LLM: {llm} model")
             docs = knowledgeBase.similarity_search(query=query)

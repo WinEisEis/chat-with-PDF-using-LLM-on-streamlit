@@ -10,7 +10,6 @@ from langchain.callbacks import get_openai_callback
 from langchain.prompts import PromptTemplate
 from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings
 import google.generativeai as genai
-import os
 
 if 'model_name' not in st.session_state:
     st.session_state['model_name'] = 'Please select the LLM model to use'
@@ -22,10 +21,10 @@ def change_name(name):
 
 # Sidebar contents
 with st.sidebar:
-    st.title('🤗💬 LLM Chat App')
+    st.title('🤗💬 Pdf reader and QA with LLM')
     st.markdown('''
     ## About
-    This app is an LLM-powered chatbot built using:
+    This app is an LLM-powered using:
     - [Streamlit](https://streamlit.io/)
     - [LangChain](https://python.langchain.com/)
     - [OpenAI](https://platform.openai.com/docs/models) ChatGPT model

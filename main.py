@@ -10,6 +10,8 @@ from langchain.callbacks import get_openai_callback
 from langchain.prompts import PromptTemplate
 from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings
 from langchain_anthropic import AnthropicLLM
+from langchain_anthropic import ChatAnthropic
+
 
 import google.generativeai as genai
 
@@ -140,7 +142,7 @@ def main():
             # Convert the chunks of text into embeddings to form the knowledge base
             embeddings = OpenAIEmbeddings()
             knowledgeBase = FAISS.from_texts(chunks, embeddings)
-            llm = AnthropicLLM(model='claude-2.1')
+            llm = ChatAnthropic(model='claude-3-opus-20240229')
 
             print(f"Using LLM: {llm} model")
             docs = knowledgeBase.similarity_search(query=query)

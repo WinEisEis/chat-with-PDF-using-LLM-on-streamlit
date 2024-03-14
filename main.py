@@ -75,6 +75,7 @@ def main():
             knowledgeBase = FAISS.from_texts(chunks, embeddings)
             llm = OpenAI(model_name="gpt-4-0125-preview",
                          temperature=0,
+                         openai_api_key=st.secrets["OPENAI_API_KEY"]
                          )
 
             print(f"Using LLM: {llm} model")
@@ -91,7 +92,7 @@ def main():
 
         elif query and b2:
 
-            genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
+            genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
             embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
 
             text_splitter = RecursiveCharacterTextSplitter(

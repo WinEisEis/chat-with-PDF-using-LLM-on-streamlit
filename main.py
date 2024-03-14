@@ -43,7 +43,6 @@ def main():
     pdf = st.file_uploader("Upload your PDF", type='pdf')
 
     if pdf is not None:
-        # pdf reader
         pdf_reader = PdfReader(pdf)
 
         text = ""
@@ -52,7 +51,6 @@ def main():
 
         # Accept user questions/query
         query = st.text_input("Ask questions about your PDF file:")
-        st.write(query)
 
         # LLM choices
         col1, col2 = st.columns([1, 1])
@@ -76,7 +74,8 @@ def main():
             embeddings = OpenAIEmbeddings()
             knowledgeBase = FAISS.from_texts(chunks, embeddings)
             llm = OpenAI(model_name="gpt-4-0125-preview",
-                         temperature=0)
+                         temperature=0,
+                         openai_api_key=os.getenv("OPENAI_API_KEY"))
 
             print(f"Using LLM: {llm} model")
             docs = knowledgeBase.similarity_search(query=query)
